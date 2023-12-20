@@ -1,6 +1,5 @@
 package com.example.ecommerceapi.api.controller;
 
-
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.ecommerceapi.service.UserService;
