@@ -21,7 +21,7 @@ import java.util.*;
  * @author Tyler Cairney
  * @version 1.0
  */
-@RestController
+@RestController // Controller for product operations at '/products' endpoint
 @RequestMapping("/products")
 public class ProductController {
 
@@ -35,7 +35,7 @@ public class ProductController {
      *
      * @param theProductService (The service handling product-related business logic)
      */
-    @Autowired
+    @Autowired // Automatically injects an instance of ProductService
     public ProductController(final ProductService theProductService) {
         this.myProductService = theProductService;
     }
@@ -45,7 +45,7 @@ public class ProductController {
      *
      * @return A list of Product objects.
      */
-    @GetMapping
+    @GetMapping // Endpoint for getting all products
     public List<Product> getAllProducts() {
         return myProductService.getAllProducts();
     }
@@ -57,7 +57,7 @@ public class ProductController {
      * @return The Product object if found
      * @throws ResponseStatusException If no product with the given ID is found
      */
-    @GetMapping("/{theProductID}")
+    @GetMapping("/{theProductID}") // Endpoint to get a product by its ID
     public Product getProductByID(@PathVariable final Long theProductID) {
         return myProductService.getProductByID(theProductID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with ID " + theProductID + " not found"));
@@ -70,7 +70,7 @@ public class ProductController {
      * @return The newly created Product object
      */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED) // Endpoint to create a new product, returns HTTP 201 status on creation
     public Product addProduct(@RequestBody final Product theProduct) {
         return myProductService.addProduct(theProduct);
     }
@@ -82,7 +82,7 @@ public class ProductController {
      * @param theProductDetails (The Product object containing updated information)
      * @return The updated Product object
      */
-    @PutMapping("/{theProductID}")
+    @PutMapping("/{theProductID}") // Endpoint to update a product by its ID
     public Product updateProduct(@PathVariable final Long theProductID, @RequestBody final Product theProductDetails) {
         return myProductService.updateProduct(theProductID, theProductDetails);
     }
@@ -93,7 +93,7 @@ public class ProductController {
      * @param theProductID (The ID of the product to be deleted)
      */
     @DeleteMapping("/{theProductID}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.NO_CONTENT) // Endpoint to delete a product by its ID, returns HTTP 204 status on successful deletion
     public void deleteProduct(@PathVariable final Long theProductID) {
         myProductService.deleteProduct(theProductID);
     }

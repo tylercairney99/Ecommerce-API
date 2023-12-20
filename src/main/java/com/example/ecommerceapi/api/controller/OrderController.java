@@ -19,7 +19,7 @@ import java.util.*;
  * @author Tyler Cairney
  * @version 1.0
  */
-@RestController
+@RestController // Controller for order operations at '/orders' endpoint
 @RequestMapping("/orders")
 public class OrderController {
 
@@ -33,7 +33,7 @@ public class OrderController {
      *
      * @param theOrderService (The service handling order-related business logic)
      */
-    @Autowired
+    @Autowired // Automatically injects an instance of OrderService
     public OrderController(final OrderService theOrderService) {
         this.myOrderService = theOrderService;
     }
@@ -43,7 +43,7 @@ public class OrderController {
      *
      * @return A list of Order objects.
      */
-    @GetMapping
+    @GetMapping // Endpoint for getting all orders
     public List<Order> getAllOrders() {
         return myOrderService.getAllOrders();
     }
@@ -55,7 +55,7 @@ public class OrderController {
      * @return The Order object if found.
      * @throws ResponseStatusException If no order with the given ID is found.
      */
-    @GetMapping("/{theOrderID}")
+    @GetMapping("/{theOrderID}") // Endpoint to get an order by its ID
     public Order getOrderByID(@PathVariable final Long theOrderID) {
         return myOrderService.getOrderByID(theOrderID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with ID " + theOrderID + " not found"));
@@ -68,7 +68,7 @@ public class OrderController {
      * @return The newly created Order object.
      */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED) // Endpoint to create a new order, returns HTTP 201 status on creation
     public Order addOrder(@RequestBody final Order theOrder) {
         return myOrderService.addOrder(theOrder);
     }
@@ -80,7 +80,7 @@ public class OrderController {
      * @param theOrderDetails The Order object containing updated information.
      * @return The updated Product object.
      */
-    @PutMapping("/{theOrderID}")
+    @PutMapping("/{theOrderID}") // Endpoint to update an order by its ID
     public Order updateOrder(@PathVariable final Long theOrderID, @RequestBody final Order theOrderDetails) {
         return myOrderService.updateOrder(theOrderID, theOrderDetails);
     }
@@ -91,7 +91,7 @@ public class OrderController {
      * @param theOrderID The ID of the order to be deleted.
      */
     @DeleteMapping("/{theOrderID}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.NO_CONTENT) // Endpoint to delete an order by its ID, returns HTTP 204 status on successful deletion
     public void deleteOrder(@PathVariable final Long theOrderID) {
         myOrderService.deleteOrder(theOrderID);
     }

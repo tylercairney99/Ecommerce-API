@@ -19,7 +19,7 @@ import java.util.*;
  * @author Tyler Cairney
  * @version 1.0
  */
-@RestController
+@RestController // Controller for user operations at '/users' endpoint
 @RequestMapping("/users")
 public class UserController {
 
@@ -33,7 +33,7 @@ public class UserController {
      *
      * @param theUserService (The service handling user-related business logic)
      */
-    @Autowired
+    @Autowired // Automatically injects an instance of UserService
     public UserController(final UserService theUserService) {
         this.myUserService = theUserService;
     }
@@ -43,7 +43,7 @@ public class UserController {
      *
      * @return A list of User objects.
      */
-    @GetMapping
+    @GetMapping // Endpoint for getting all users
     public List<User> getAllUsers() {
         return myUserService.getAllUsers();
     }
@@ -55,7 +55,7 @@ public class UserController {
      * @return The User object if found
      * @throws ResponseStatusException If no user with the given ID is found
      */
-    @GetMapping("/{theUserID}")
+    @GetMapping("/{theUserID}") // Endpoint to get a user by their ID
     public User getUserByID(@PathVariable final Long theUserID) {
         return myUserService.getUserByID(theUserID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + theUserID + " not found"));
@@ -68,7 +68,7 @@ public class UserController {
      * @return The newly created User object
      */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED) // Endpoint to create a new user, returns HTTP 201 status on creation
     public User addUser(@RequestBody final User theUser) {
         return myUserService.addUser(theUser);
     }
@@ -80,7 +80,7 @@ public class UserController {
      * @param theUserDetails (The User object containing updated information)
      * @return The updated User object.
      */
-    @PutMapping("/{theUserID}")
+    @PutMapping("/{theUserID}") // Endpoint to update a user by their ID
     public User updateUser(@PathVariable Long theUserID, @RequestBody final User theUserDetails) {
         return myUserService.updateUser(theUserID, theUserDetails);
     }
@@ -91,7 +91,7 @@ public class UserController {
      * @param theUserID (The ID of the user to be deleted)
      */
     @DeleteMapping("/{theUserID}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.NO_CONTENT) // Endpoint to delete a user by their ID, returns HTTP 204 status on successful deletion
     public void deleteUser(@PathVariable final Long theUserID) {
         myUserService.deleteUser(theUserID);
     }
