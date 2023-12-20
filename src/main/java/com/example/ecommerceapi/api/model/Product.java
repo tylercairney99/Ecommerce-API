@@ -3,58 +3,130 @@ package com.example.ecommerceapi.api.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "products")
+/**
+ * Represents a product entity in the e-commerce system.
+ * This class maps to a database table and provides data fields for product attributes.
+ *
+ * @author Tyler Cairney
+ * @version 1.0
+ */
+@Entity // Marks this class as a JPA entity (i.e., a persistent domain object).
+@Table(name = "products") // Specifies the table in the database with which this entity is associated.
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id  // Marks this field as the primary key of the entity.
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Configures the way of increment of the specified column(field).
 
-    private Long id;
+    /**
+     * Product ID.
+     */
+    private Long myID;
 
-    private String productName;
+    /**
+     * Product name.
+     */
+    private String myProductName;
 
-    private BigDecimal Price;
+    /**
+     * Product price.
+     */
+    private BigDecimal myPrice;
 
-    private int StockQuantity;
+    /**
+     * Product quantity in stock.
+     */
+    private int myStockQuantity;
 
-
+    /**
+     * Default constructor for JPA.
+     * This is required for JPA entity initialization.
+     */
     public Product() {
         // no arg constructor for JPA
     }
 
+    /**
+     * Constructs a new Product with the specified details.
+     *
+     * @param theProductName The name of the product.
+     * @param thePrice The price of the product.
+     * @param theStockQuantity The quantity of the product in stock.
+     */
     public Product(final String theProductName, final BigDecimal thePrice, final int theStockQuantity) {
-        this.productName = theProductName;
-        this.Price = thePrice;
-        this.StockQuantity = theStockQuantity;
+        this.myProductName = theProductName;
+        this.myPrice = thePrice;
+        this.myStockQuantity = theStockQuantity;
     }
 
+    /**
+     * Gets the ID of the product.
+     *
+     * @return The product ID.
+     */
     public Long getID() {
-        return id;
+        return myID;
     }
 
+    /**
+     * Sets the ID of the product.
+     *
+     * @param theID The new ID for the product.
+     */
     public void setID(final Long theID) {
-        this.id = theID;
+        this.myID = theID;
     }
+
+    /**
+     * Gets the product name.
+     *
+     * @return The name of the product.
+     */
     public String getProductName() {
-        return productName;
+        return myProductName;
     }
 
+    /**
+     * Sets the product name.
+     *
+     * @param theProductName The new name for the product.
+     */
     public void setProductName(final String theProductName) {
-        this.productName = theProductName;
+        this.myProductName = theProductName;
     }
+
+    /**
+     * Gets the price of the product.
+     *
+     * @return The price of the product.
+     */
     public BigDecimal getPrice() {
-        return Price;
+        return myPrice;
     }
 
+    /**
+     * Sets the price of the product.
+     *
+     * @param thePrice The new price for the product.
+     */
     public void setPrice(final BigDecimal thePrice) {
-        this.Price = thePrice;
-    }
-    public int getStockQuantity() {
-        return StockQuantity;
+        this.myPrice = thePrice;
     }
 
+    /**
+     * Gets the stock quantity of the product.
+     *
+     * @return The stock quantity of the product.
+     */
+    public int getStockQuantity() {
+        return myStockQuantity;
+    }
+
+    /**
+     * Sets the stock quantity of the product.
+     *
+     * @param theStockQuantity The new stock quantity for the product.
+     */
     public void setStockQuantity(final int theStockQuantity) {
-        this.StockQuantity = theStockQuantity;
+        this.myStockQuantity = theStockQuantity;
     }
 }
