@@ -23,7 +23,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID") // Foreign key relationship
-    private User user; // Object reference
+    private User user; // User object reference
 
     public Order() {
         // no arg constructor for JPA
