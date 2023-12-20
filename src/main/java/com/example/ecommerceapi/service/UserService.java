@@ -68,17 +68,24 @@ public class UserService {
      * Updates the details of an existing user.
      *
      * @param theID (The ID of the user to update)
-     * @param userDetails (The user details to be updated)
+     * @param theUserDetails (The user details to be updated)
      * @return The updated user.
      * @throws ResponseStatusException If the user with the given ID cannot be found.
      */
-    public User updateUser(final Long theID, final User userDetails) {
+    public User updateUser(final Long theID, final User theUserDetails) {
         final User user = myUserRepository.findById(theID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + theID + " not found"));
 
-        user.setUsername(userDetails.getUsername());
-        user.setPassword(userDetails.getPassword());
-        user.setEmail(userDetails.getEmail());
+        if (theUserDetails.getUsername() != null) {
+            user.setUsername(theUserDetails.getUsername());
+        }
+        if (theUserDetails.getPassword() != null) {
+            user.setPassword(theUserDetails.getPassword());
+        }
+        if (theUserDetails.getEmail() != null) {
+
+            user.setEmail(theUserDetails.getEmail());
+        }
 
         // can add more logic to change users here
 

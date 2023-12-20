@@ -70,17 +70,21 @@ public class ProductService {
      * Throws IllegalArgumentException if product is not found.
      *
      * @param theID (The ID of the product to update)
-     * @param productDetails (The new details for the product)
+     * @param theProductDetails (The new details for the product)
      * @return The updated product
      * @throws ResponseStatusException If no product with the given ID is found
      */
-    public Product updateProduct(final Long theID, final Product productDetails) { // Update
+    public Product updateProduct(final Long theID, final Product theProductDetails) { // Update
         final Product product = myProductRepository.findById(theID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with ID " + theID + " not found"));
 
-        product.setProductName(productDetails.getProductName());
-        product.setPrice(productDetails.getPrice());
-        product.setStockQuantity(productDetails.getStockQuantity());
+        if (theProductDetails.getProductName() != null) {
+            product.setProductName(theProductDetails.getProductName());
+        }
+        if (theProductDetails.getPrice() != null) {
+            product.setPrice(theProductDetails.getPrice());
+        }
+        product.setStockQuantity(theProductDetails.getStockQuantity()); // not checking for null because stockQuantity is a primitive (int)
 
         // can add more logic to change products here
 

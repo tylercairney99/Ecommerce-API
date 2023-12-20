@@ -147,7 +147,7 @@ public class Order {
      *
      * @param theUser The User to be associated with this order.
      */
-    public void setMyUser(final User theUser) {
+    public void setUser(final User theUser) {
         this.myUser = theUser;
     }
 }
