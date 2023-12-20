@@ -15,7 +15,7 @@ import jakarta.validation.constraints.Size;
  * @author Tyler Cairney
  * @version 1.0
  */
-public class UserDTO {
+public class UserDTO { // Not needed for a personal project, but good practice
 
     /**
      * The unique identifier of the user.

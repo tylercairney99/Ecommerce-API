@@ -4,9 +4,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.ecommerceapi.service.UserService;
 import com.example.ecommerceapi.api.model.User;
+import com.example.ecommerceapi.api.dto.UserDTO;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
-
+import org.modelmapper.ModelMapper;
+import jakarta.validation.Valid;
 import java.util.*;
 
 /**
@@ -28,14 +30,17 @@ public class UserController {
      */
     private final UserService myUserService;
 
+    private final ModelMapper myModelMapper;
+
     /**
      * Constructs a UserController with dependency injection of the UserService.
      *
      * @param theUserService (The service handling user-related business logic)
      */
     @Autowired // Automatically injects an instance of UserService
-    public UserController(final UserService theUserService) {
+    public UserController(final UserService theUserService, final ModelMapper theModelMapper) {
         this.myUserService = theUserService;
+        this.myModelMapper = theModelMapper;
     }
 
     /**
@@ -62,27 +67,37 @@ public class UserController {
     }
 
     /**
-     * Creates a new user.
+     * Creates and adds a new user to the system.
      *
-     * @param theUser (The User object to be created)
-     * @return The newly created User object
+     * Accepts a UserDTO object, validates it, and maps it to a User entity
+     * for creation. Returns the created user as a UserDTO.
+     *
+     * @param theUserDTO The DTO containing the new user's data.
+     * @return The created user as a UserDTO.
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // Endpoint to create a new user, returns HTTP 201 status on creation
-    public User addUser(@RequestBody final User theUser) {
-        return myUserService.addUser(theUser);
+    public UserDTO addUser(@Valid @RequestBody final UserDTO theUserDTO) {
+        final User user = myModelMapper.map(theUserDTO, User.class);
+        final User createdUser = myUserService.addUser(user);
+        return myModelMapper.map(createdUser, UserDTO.class);
     }
 
     /**
-     * Updates an existing user's information.
+     * Updates the information of an existing user.
      *
-     * @param theUserID (The ID of the user to update)
-     * @param theUserDetails (The User object containing updated information)
-     * @return The updated User object.
+     * Accepts a UserDTO object with updated data, validates it, and maps it
+     * to the User entity to update. The user to update is identified by theUserID.
+     * Returns the updated user as a UserDTO.
+     *
+     * @param theUserID The ID of the user to be updated.
+     * @param theUserDTO The DTO containing the user's updated data.
+     * @return The updated user as a UserDTO.
      */
     @PutMapping("/{theUserID}") // Endpoint to update a user by their ID
-    public User updateUser(@PathVariable Long theUserID, @RequestBody final User theUserDetails) {
-        return myUserService.updateUser(theUserID, theUserDetails);
+    public UserDTO updateUser(@PathVariable Long theUserID, @Valid @RequestBody final UserDTO theUserDTO) {
+        final User updatedUser = myUserService.updateUser(theUserID, myModelMapper.map(theUserDTO, User.class));
+        return myModelMapper.map(updatedUser, UserDTO.class);
     }
 
     /**
