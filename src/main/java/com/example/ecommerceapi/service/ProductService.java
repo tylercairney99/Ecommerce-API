@@ -51,7 +51,7 @@ public class ProductService {
      *
      * @return A list of all products
      */
-    public List<Product> getAllProducts() {
+    public List<Product> getAllProducts() { // Read
         return myProductRepository.findAll();
     }
 
@@ -69,14 +69,14 @@ public class ProductService {
      * Updates a product's details in the repository.
      * Throws IllegalArgumentException if product is not found.
      *
-     * @param theID (The ID of the product to update)
+     * @param theProductID (The ID of the product to update)
      * @param theProductDetails (The new details for the product)
      * @return The updated product
      * @throws ResponseStatusException If no product with the given ID is found
      */
-    public Product updateProduct(final Long theID, final Product theProductDetails) { // Update
-        final Product product = myProductRepository.findById(theID)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with ID " + theID + " not found"));
+    public Product updateProduct(final Long theProductID, final Product theProductDetails) { // Update
+        final Product product = myProductRepository.findById(theProductID)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with ID " + theProductID + " not found"));
 
         if (theProductDetails.getProductName() != null) {
             product.setProductName(theProductDetails.getProductName());
@@ -95,12 +95,12 @@ public class ProductService {
      * Deletes a product from the repository by its ID.
      * Throws IllegalArgumentException if product is not found.
      *
-     * @param theID (The ID of the product to delete)
+     * @param theProductID (The ID of the product to delete)
      * @throws ResponseStatusException If no product with the given ID is found
      */
-    public void deleteProduct(final Long theID) {
-        final Product product = myProductRepository.findById(theID)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with ID " + theID + " not found"));
+    public void deleteProduct(final Long theProductID) { // Delete
+        final Product product = myProductRepository.findById(theProductID)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with ID " + theProductID + " not found"));
 
         myProductRepository.delete(product);
     }

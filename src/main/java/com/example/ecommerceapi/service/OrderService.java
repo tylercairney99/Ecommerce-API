@@ -2,7 +2,6 @@ package com.example.ecommerceapi.service;
 
 import com.example.ecommerceapi.api.model.Order;
 import com.example.ecommerceapi.api.repository.OrderRepository;
-import com.example.ecommerceapi.api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,10 +25,10 @@ public class OrderService {
     private final OrderRepository myOrderRepository;
 
     /**
-     * Constructs a ProductService with the provided product repository.
+     * Constructs a OrderService with the provided order repository.
      *
      *
-     * @param theOrderRepository The product repository to be used by this service.
+     * @param theOrderRepository The order repository to be used by this service.
      */
     @Autowired
     public OrderService(final OrderRepository theOrderRepository) {
@@ -42,7 +41,7 @@ public class OrderService {
      * @param theOrder (The order to be added)
      * @return The added order
      */
-    public Order addOrder(final Order theOrder) {
+    public Order addOrder(final Order theOrder) { // Create
         return myOrderRepository.save(theOrder);
     }
 
@@ -51,11 +50,17 @@ public class OrderService {
      *
      * @return A list of all orders
      */
-    public List<Order> getAllOrders() {
+    public List<Order> getAllOrders() { // Read
         return myOrderRepository.findAll();
     }
 
-    public Optional<Order> getOrderByID(final Long theOrderID) {
+    /**
+     * Retrieves a order based on its unique ID.
+     *
+     * @param theOrderID (Order ID)
+     * @return An Optional containing the order if found, or empty otherwise
+     */
+    public Optional<Order> getOrderByID(final Long theOrderID) { // Read
         return myOrderRepository.findById(theOrderID);
     }
 
@@ -67,7 +72,7 @@ public class OrderService {
      * @return The updated order.
      * @throws ResponseStatusException If the order with the given ID cannot be found.
      */
-    public Order updateOrder(final Long theOrderID, final Order theOrderDetails) {
+    public Order updateOrder(final Long theOrderID, final Order theOrderDetails) { // Update
         final Order order = myOrderRepository.findById(theOrderID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with ID " + theOrderID + " not found"));
 
@@ -84,6 +89,8 @@ public class OrderService {
             order.setUser(theOrderDetails.getMyUser());
         }
 
+        // can add more logic to change orders here
+
         return myOrderRepository.save(order);
     }
 
@@ -93,7 +100,7 @@ public class OrderService {
      * @param theOrderID The ID of the order to be deleted.
      * @throws ResponseStatusException If the order with the given ID cannot be found.
      */
-    public void deleteOrder(final Long theOrderID) {
+    public void deleteOrder(final Long theOrderID) { // Delete
         final Order order = myOrderRepository.findById(theOrderID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with ID " + theOrderID + " not found"));
 

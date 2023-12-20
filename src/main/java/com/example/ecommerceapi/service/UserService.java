@@ -41,7 +41,7 @@ public class UserService {
      * @param theUser (The user to be added)
      * @return The added user
      */
-    public User addUser(final User theUser) {
+    public User addUser(final User theUser) { // Create
         return myUserRepository.save(theUser);
     }
 
@@ -50,7 +50,7 @@ public class UserService {
      *
      * @return A list of all users
      */
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers() { // Read
         return myUserRepository.findAll();
     }
 
@@ -60,27 +60,28 @@ public class UserService {
      * @param theID (User's ID)
      * @return An Optional containing the user if found, or empty otherwise
      */
-    public Optional<User> getUserByID(final Long theID) {
+    public Optional<User> getUserByID(final Long theID) { // Read
         return myUserRepository.findById(theID);
     }
 
     /**
      * Updates the details of an existing user.
      *
-     * @param theID (The ID of the user to update)
+     * @param theUserID (The ID of the user to update)
      * @param theUserDetails (The user details to be updated)
      * @return The updated user.
      * @throws ResponseStatusException If the user with the given ID cannot be found.
      */
-    public User updateUser(final Long theID, final User theUserDetails) {
-        final User user = myUserRepository.findById(theID)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + theID + " not found"));
+    public User updateUser(final Long theUserID, final User theUserDetails) { // Update
+        final User user = myUserRepository.findById(theUserID)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + theUserID + " not found"));
 
         if (theUserDetails.getUsername() != null) {
             user.setUsername(theUserDetails.getUsername());
         }
         if (theUserDetails.getPassword() != null) {
             user.setPassword(theUserDetails.getPassword());
+
         }
         if (theUserDetails.getEmail() != null) {
 
@@ -95,12 +96,12 @@ public class UserService {
     /**
      * Deletes a user from the repository by their ID.
      *
-     * @param theID (The ID of the user to be deleted)
-     * @throws ResponseStatusException If the user cannot be found.
+     * @param theUserID (The ID of the user to be deleted)
+     * @throws ResponseStatusException If the user cannot be found with the given ID cannot be found
      */
-    public void deleteUser(final Long theID) {
-        final User user = myUserRepository.findById(theID)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + theID + " not found"));
+    public void deleteUser(final Long theUserID) { // Delete
+        final User user = myUserRepository.findById(theUserID)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + theUserID + " not found"));
 
         myUserRepository.delete(user);
     }
