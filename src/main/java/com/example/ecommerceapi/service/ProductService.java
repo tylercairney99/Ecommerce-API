@@ -1,9 +1,12 @@
 package com.example.ecommerceapi.service;
 
+
 import com.example.ecommerceapi.api.model.Product;
 import com.example.ecommerceapi.api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.*;
 
@@ -20,16 +23,17 @@ public class ProductService {
     /**
      * The repository for product data.
      */
-    private final ProductRepository productRepository;
+    private final ProductRepository myProductRepository;
 
     /**
      * Constructs a ProductService with the provided product repository.
+     *
      *
      * @param theProductRepository The product repository to be used by this service.
      */
     @Autowired
     public ProductService(final ProductRepository theProductRepository) {
-        this.productRepository = theProductRepository;
+        this.myProductRepository = theProductRepository;
     }
 
     /**
@@ -39,7 +43,7 @@ public class ProductService {
      * @return The added product
      */
     public Product addProduct(final Product theProduct) { // Create
-        return productRepository.save(theProduct);
+        return myProductRepository.save(theProduct);
     }
 
     /**
@@ -48,31 +52,31 @@ public class ProductService {
      * @return A list of all products
      */
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return myProductRepository.findAll();
     }
 
     /**
      * Retrieves a specific product based on its ID.
      *
      * @param theID (The ID of the product)
-     * @return An Optional containing the product if found.
+     * @return An Optional containing the product if found
      */
     public Optional<Product> getProductByID(final Long theID) { // Read
-        return productRepository.findById(theID);
+        return myProductRepository.findById(theID);
     }
 
     /**
      * Updates a product's details in the repository.
      * Throws IllegalArgumentException if product is not found.
      *
-     * @param theID The ID of the product to update.
-     * @param productDetails The new details for the product.
-     * @return The updated product.
-     * @throws IllegalArgumentException If no product with the given ID is found.
+     * @param theID (The ID of the product to update)
+     * @param productDetails (The new details for the product)
+     * @return The updated product
+     * @throws ResponseStatusException If no product with the given ID is found
      */
     public Product updateProduct(final Long theID, final Product productDetails) { // Update
-        final Product product = productRepository.findById(theID)
-                .orElseThrow(() -> new IllegalArgumentException("Product with ID " + theID + " not found"));
+        final Product product = myProductRepository.findById(theID)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with ID " + theID + " not found"));
 
         product.setProductName(productDetails.getProductName());
         product.setPrice(productDetails.getPrice());
@@ -80,21 +84,21 @@ public class ProductService {
 
         // can add more logic to change products here
 
-        return productRepository.save(product);
+        return myProductRepository.save(product);
     }
 
     /**
      * Deletes a product from the repository by its ID.
      * Throws IllegalArgumentException if product is not found.
      *
-     * @param theID The ID of the product to delete.
-     * @throws IllegalArgumentException If no product with the given ID is found.
+     * @param theID (The ID of the product to delete)
+     * @throws ResponseStatusException If no product with the given ID is found
      */
     public void deleteProduct(final Long theID) {
-        Product product = productRepository.findById(theID)
-                .orElseThrow(() -> new IllegalArgumentException("Product with ID " + theID + " not found"));
+        final Product product = myProductRepository.findById(theID)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with ID " + theID + " not found"));
 
-        productRepository.delete(product);
+        myProductRepository.delete(product);
     }
 }
 
