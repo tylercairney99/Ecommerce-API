@@ -33,28 +33,28 @@ public class Product {
         return id;
     }
 
-    public void setID(Long theID) {
+    public void setID(final Long theID) {
         this.id = theID;
     }
     public String getProductName() {
         return productName;
     }
 
-    public void setProductName(String theProductName) {
+    public void setProductName(final String theProductName) {
         this.productName = theProductName;
     }
     public BigDecimal getPrice() {
         return Price;
     }
 
-    public void setPrice(BigDecimal thePrice) {
+    public void setPrice(final BigDecimal thePrice) {
         this.Price = thePrice;
     }
     public int getStockQuantity() {
         return StockQuantity;
     }
 
-    public void setStockQuantity(int theStockQuantity) {
+    public void setStockQuantity(final int theStockQuantity) {
         this.StockQuantity = theStockQuantity;
     }
 }
