@@ -20,7 +20,7 @@ public class Product {
     /**
      * Product ID.
      */
-    private Long myID;
+    private Long myProductID;
 
     /**
      * Product name.
@@ -64,7 +64,7 @@ public class Product {
      * @return The product ID.
      */
     public Long getID() {
-        return myID;
+        return myProductID;
     }
 
     /**
@@ -73,7 +73,7 @@ public class Product {
      * @param theID The new ID for the product.
      */
     public void setID(final Long theID) {
-        this.myID = theID;
+        this.myProductID = theID;
     }
 
     /**
