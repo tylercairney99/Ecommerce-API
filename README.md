@@ -1,8 +1,8 @@
-# Ecommerce API
+# E-commerce API 
 
 ## Overview
 
-This Ecommerce API is a RESTful web service designed as a backend for an e-commerce platform. It provides a robust interface for handling product inventory, user accounts, and order management. Built with Spring Boot and Java, this API is equipped with a suite of endpoints that facilitate CRUD operations on a database of products and user orders.
+This e-commerce API is a personal project that utilizes a RESTful web service designed as a backend for an e-commerce platform. It provides a robust interface for handling product inventory, user accounts, and order management. Built with Spring Boot and Java, this API is equipped with a suite of endpoints that facilitate CRUD operations on a database of products and user orders.
 
 ## Features
 
