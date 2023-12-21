@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * to perform business logic and data persistence.
  *
  * @author Tyler Cairney
- * @version 1.0
+ * @version 1.0.1
  */
 @RestController // Controller for user operations at '/users' endpoint
 @RequestMapping("/users")
