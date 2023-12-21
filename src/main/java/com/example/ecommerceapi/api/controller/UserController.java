@@ -40,6 +40,7 @@ public class UserController {
      * Constructs a UserController with dependency injection of the UserService.
      *
      * @param theUserService (The service handling user-related business logic)
+     * @param theModelMapper (Mapping between DTO and entity classes)
      */
     @Autowired // Automatically injects an instance of UserService
     public UserController(final UserService theUserService, final ModelMapper theModelMapper) {

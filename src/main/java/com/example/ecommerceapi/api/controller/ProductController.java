@@ -43,6 +43,7 @@ public class ProductController {
      * Constructs a ProductController with dependency injection of the ProductService.
      *
      * @param theProductService (The service handling product-related business logic)
+     * @param theModelMapper (Mapping between DTO and entity classes)
      */
     @Autowired // Automatically injects an instance of ProductService
     public ProductController(final ProductService theProductService, final ModelMapper theModelMapper) {
