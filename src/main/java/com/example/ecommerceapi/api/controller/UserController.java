@@ -30,6 +30,9 @@ public class UserController {
      */
     private final UserService myUserService;
 
+    /**
+     * ModelMapper for converting between DTO and entity classes.
+     */
     private final ModelMapper myModelMapper;
 
     /**
@@ -72,7 +75,7 @@ public class UserController {
      * Accepts a UserDTO object, validates it, and maps it to a User entity
      * for creation. Returns the created user as a UserDTO.
      *
-     * @param theUserDTO The DTO containing the new user's data.
+     * @param theUserDTO (The DTO containing the new user's data)
      * @return The created user as a UserDTO.
      */
     @PostMapping
@@ -90,11 +93,11 @@ public class UserController {
      * to the User entity to update. The user to update is identified by theUserID.
      * Returns the updated user as a UserDTO.
      *
-     * @param theUserID The ID of the user to be updated.
-     * @param theUserDTO The DTO containing the user's updated data.
+     * @param theUserID (The ID of the user to be updated)
+     * @param theUserDTO (The DTO containing the user's updated data)
      * @return The updated user as a UserDTO.
      */
-    @PutMapping("/{theUserID}") // Endpoint to update a user by their ID
+    @PutMapping("/{theUserID}")
     public UserDTO updateUser(@PathVariable Long theUserID, @Valid @RequestBody final UserDTO theUserDTO) {
         final User updatedUser = myUserService.updateUser(theUserID, myModelMapper.map(theUserDTO, User.class));
         return myModelMapper.map(updatedUser, UserDTO.class);

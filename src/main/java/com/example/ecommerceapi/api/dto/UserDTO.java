@@ -47,6 +47,29 @@ public class UserDTO { // Not needed for a personal project, but good practice
     private String myEmail;
 
     /**
+     * Default no-argument constructor.
+     * Used by frameworks and libraries for object instantiation.
+     */
+    public UserDTO() {
+        // no arg constructor
+    }
+
+    /**
+     * Constructs a new UserDTO with the specified parameters.
+     *
+     * @param theUserID (The unique identifier for the user)
+     * @param theUsername (The username for the user)
+     * @param thePassword (The password for the user)
+     * @param theEmail (The email for the user)
+     */
+    public UserDTO(final Long theUserID, final String theUsername, final String thePassword, final String theEmail) {
+        this.myUserID = theUserID;
+        this.myUsername = theUsername;
+        this.myPassword = thePassword;
+        this.myEmail = theEmail;
+    }
+
+    /**
      * Gets the unique identifier for the user.
      *
      * @return The user's unique identifier.
