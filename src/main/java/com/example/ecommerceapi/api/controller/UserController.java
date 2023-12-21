@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.modelmapper.ModelMapper;
 import jakarta.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing users.
@@ -47,26 +48,38 @@ public class UserController {
     }
 
     /**
-     * Retrieves a list of all users.
+     * Retrieves all users and returns them as a list of UserDTOs.
      *
-     * @return A list of User objects.
+     * This method fetches a list of all User entities, maps them to UserDTOs,
+     * and returns the list of DTOs. Useful for providing a view of user data
+     * suitable for client-side use.
+     *
+     * @return A list of UserDTOs representing all users.
      */
     @GetMapping // Endpoint for getting all users
-    public List<User> getAllUsers() {
-        return myUserService.getAllUsers();
+    public List<UserDTO> getAllUsers() {
+        final List<User> users = myUserService.getAllUsers();
+        return users.stream()
+                .map(user -> myModelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList());
     }
 
     /**
-     * Retrieves a specific user by their unique identifier.
+     * Retrieves a specific user by their unique identifier and returns it as a UserDTO.
      *
-     * @param theUserID (ID of the user to retrieve)
-     * @return The User object if found
-     * @throws ResponseStatusException If no user with the given ID is found
+     * This method fetches a user from the database using their ID. If found, the user
+     * is mapped to a UserDTO and returned. If no user is found with the provided ID,
+     * a ResponseStatusException with HttpStatus.NOT_FOUND is thrown.
+     *
+     * @param theUserID (The unique identifier of the user to be retrieved)
+     * @return A UserDTO representing the retrieved user.
+     * @throws ResponseStatusException If no user with the given ID is found.
      */
-    @GetMapping("/{theUserID}") // Endpoint to get a user by their ID
-    public User getUserByID(@PathVariable final Long theUserID) {
-        return myUserService.getUserByID(theUserID)
+    @GetMapping("/{theUserID}")
+    public UserDTO getUserByID(@PathVariable final Long theUserID) {
+        User user = myUserService.getUserByID(theUserID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + theUserID + " not found"));
+        return myModelMapper.map(user, UserDTO.class);
     }
 
     /**
@@ -99,7 +112,8 @@ public class UserController {
      */
     @PutMapping("/{theUserID}")
     public UserDTO updateUser(@PathVariable Long theUserID, @Valid @RequestBody final UserDTO theUserDTO) {
-        final User updatedUser = myUserService.updateUser(theUserID, myModelMapper.map(theUserDTO, User.class));
+        User userToUpdate = myModelMapper.map(theUserDTO, User.class);
+        User updatedUser = myUserService.updateUser(theUserID, userToUpdate);
         return myModelMapper.map(updatedUser, UserDTO.class);
     }
 
