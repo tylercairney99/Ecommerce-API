@@ -22,6 +22,7 @@ public class Order {
     /**
      * Order ID.
      */
+    @Column(name = "order_id")
     private Long myOrderID;
 
     /**
@@ -43,7 +44,7 @@ public class Order {
      * User Object.
      */
     @ManyToOne // Indicates a many-to-one relationship between 'Order' and 'User'.
-    @JoinColumn(name = "userID", referencedColumnName = "userID") // Foreign key relationship
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id") // Foreign key relationship
     @Getter // Lombok generates the getter getUser() method
     private User myUser;
 

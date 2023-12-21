@@ -20,6 +20,7 @@ public class Product {
     /**
      * Product ID.
      */
+    @Column(name = "product_id")
     private Long myProductID;
 
     /**

@@ -26,14 +26,14 @@ public class OrderLine {
      * Order Object.
      */
     @ManyToOne // Indicates a many-to-one relationship between 'OrderLine' and 'Order'.
-    @JoinColumn(name = "order_id", referencedColumnName = "orderID") // Foreign key relationship
+    @JoinColumn(name = "order_id", referencedColumnName = "order_id") // Foreign key relationship
     private Order myOrder;
 
     /**
      * Product Object.
      */
     @ManyToOne // Indicates a many-to-one relationship between 'OrderLine' and 'Product'.
-    @JoinColumn(name = "product_id", referencedColumnName = "productID") // Foreign key relationship
+    @JoinColumn(name = "product_id", referencedColumnName = "product_id") // Foreign key relationship
     private Product myProduct;
 
     /**

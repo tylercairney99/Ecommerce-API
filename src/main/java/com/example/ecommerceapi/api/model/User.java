@@ -17,8 +17,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Configures the way of increment of the specified column(field).
 
     /**
-     *
+     * User's ID.
      */
+    @Column(name = "user_id")
     private Long myUserID;
 
     /**
