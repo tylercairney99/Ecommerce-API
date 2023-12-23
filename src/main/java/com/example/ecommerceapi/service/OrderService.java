@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -42,6 +44,10 @@ public class OrderService {
      * @return The added order
      */
     public Order addOrder(final Order theOrder) { // Create
+        if (theOrder == null) {
+            throw new IllegalArgumentException("Order cannot be null");
+        }
+
         return myOrderRepository.save(theOrder);
     }
 
@@ -73,6 +79,16 @@ public class OrderService {
      * @throws ResponseStatusException If the order with the given ID cannot be found.
      */
     public Order updateOrder(final Long theOrderID, final Order theOrderDetails) { // Update
+        if (theOrderDetails == null) {
+            throw new IllegalArgumentException("Order details cannot be null");
+        }
+        if (theOrderDetails.getOrderDate().isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Order date cannot be in the future");
+        }
+        if (theOrderDetails.getTotalPrice().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Total price cannot be negative");
+        }
+
         final Order order = myOrderRepository.findById(theOrderID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with ID " + theOrderID + " not found"));
 
