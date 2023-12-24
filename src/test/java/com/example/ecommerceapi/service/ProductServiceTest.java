@@ -153,6 +153,61 @@ public class ProductServiceTest {
         verify(myProductRepository, never()).save(any(Product.class));
     }
 
+    /**
+     * Test case to verify that when adding a product with all fields specified,
+     * the added product's fields match the expected values.
+     */
+    @Test
+    void whenAddProductWithAllFields_thenAllFieldsAreCorrect() {
+        when(myProductRepository.save(any(Product.class))).thenReturn(myProduct);
+        Product savedProduct = myProductService.addProduct(myProduct);
+        assertNotNull(savedProduct, "Saved product should not be null");
+        assertEquals(myProduct.getProductName(), savedProduct.getProductName(), "Product names should match");
+        assertEquals(myProduct.getPrice(), savedProduct.getPrice(), "Prices should match");
+        assertEquals(myProduct.getStockQuantity(), savedProduct.getStockQuantity(), "Stock quantities should match");
+        verify(myProductRepository).save(myProduct);
+    }
+
+    /**
+     * Test case to verify that when updating a product, all fields are correctly updated
+     * to the new values.
+     */
+    @Test
+    void whenUpdateProduct_thenAllFieldsAreUpdated() {
+        Product updatedInfo = new Product("UpdatedProduct", BigDecimal.valueOf(29.99), 20);
+        updatedInfo.setID(myProduct.getID());
+        when(myProductRepository.findById(myProduct.getID())).thenReturn(Optional.of(myProduct));
+        when(myProductRepository.save(any(Product.class))).thenReturn(updatedInfo);
+        Product result = myProductService.updateProduct(updatedInfo.getID(), updatedInfo);
+        assertNotNull(result, "Updated product should not be null");
+        assertEquals(updatedInfo.getProductName(), result.getProductName(), "Product names should be updated");
+        assertEquals(updatedInfo.getPrice(), result.getPrice(), "Prices should be updated");
+        assertEquals(updatedInfo.getStockQuantity(), result.getStockQuantity(), "Stock quantities should be updated");
+    }
+
+    /**
+     * Test case to verify that attempting to add a null product results in an
+     * IllegalArgumentException being thrown.
+     */
+    @Test
+    void whenAddNullProduct_thenIllegalArgumentExceptionIsThrown() {
+        final Product nullProduct = null;
+        assertThrows(IllegalArgumentException.class, () -> myProductService.addProduct(nullProduct),
+                "Adding a null product should throw IllegalArgumentException");
+    }
+
+    /**
+     * Test case to verify that attempting to update a product with invalid data
+     * results in an IllegalArgumentException being thrown.
+     */
+    @Test
+    void whenUpdateProductWithInvalidData_thenIllegalArgumentExceptionIsThrown() {
+        Product invalidProduct = new Product("", BigDecimal.valueOf(-10), -5);
+        invalidProduct.setID(myProduct.getID());
+        assertThrows(IllegalArgumentException.class, () -> myProductService.updateProduct(invalidProduct.getID(), invalidProduct),
+                "Updating a product with invalid data should throw IllegalArgumentException");
+    }
+
     // Potentially add more tests for edge cases, but as of now there is full method coverage for ProductService
 
 }

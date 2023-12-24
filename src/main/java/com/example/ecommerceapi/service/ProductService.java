@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -43,6 +44,10 @@ public class ProductService {
      * @return The added product
      */
     public Product addProduct(final Product theProduct) { // Create
+        if (theProduct == null) {
+            throw new IllegalArgumentException("Product cannot be null");
+        }
+
         return myProductRepository.save(theProduct);
     }
 
@@ -75,6 +80,19 @@ public class ProductService {
      * @throws ResponseStatusException If no product with the given ID is found
      */
     public Product updateProduct(final Long theProductID, final Product theProductDetails) { // Update
+        if (theProductDetails == null) {
+            throw new IllegalArgumentException("Product details cannot be null");
+        }
+        if (theProductDetails.getProductName() == null || theProductDetails.getProductName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Product name cannot be null or empty");
+        }
+        if (theProductDetails.getPrice() == null || theProductDetails.getPrice().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Price cannot be null or negative");
+        }
+        if (theProductDetails.getStockQuantity() < 0) {
+            throw new IllegalArgumentException("Stock quantity cannot be negative");
+        }
+
         final Product product = myProductRepository.findById(theProductID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with ID " + theProductID + " not found"));
 
