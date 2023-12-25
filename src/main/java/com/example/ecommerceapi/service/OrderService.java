@@ -42,6 +42,7 @@ public class OrderService {
      *
      * @param theOrder (The order to be added)
      * @return The added order
+     * @throws IllegalArgumentException If order is null.
      */
     public Order addOrder(final Order theOrder) { // Create
         if (theOrder == null) {
@@ -76,6 +77,7 @@ public class OrderService {
      * @param theOrderID (The ID of the order to update)
      * @param theOrderDetails (The order details to be updated)
      * @return The updated order.
+     * @throws IllegalArgumentException If the order is null, date is in the future, or price is negative.
      * @throws ResponseStatusException If the order with the given ID cannot be found.
      */
     public Order updateOrder(final Long theOrderID, final Order theOrderDetails) { // Update

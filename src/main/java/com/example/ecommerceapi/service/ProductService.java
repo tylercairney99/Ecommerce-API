@@ -42,6 +42,7 @@ public class ProductService {
      *
      * @param theProduct (The product to be added)
      * @return The added product
+     * @throws IllegalArgumentException If Product is null.
      */
     public Product addProduct(final Product theProduct) { // Create
         if (theProduct == null) {
@@ -77,6 +78,8 @@ public class ProductService {
      * @param theProductID (The ID of the product to update)
      * @param theProductDetails (The new details for the product)
      * @return The updated product
+     * @throws IllegalArgumentException If product is null, product name is null/empty, price is negative
+     * or stock quantity is negative.
      * @throws ResponseStatusException If no product with the given ID is found
      */
     public Product updateProduct(final Long theProductID, final Product theProductDetails) { // Update

@@ -13,7 +13,7 @@ import jakarta.persistence.*;
 @Table(name = "users") // Specifies the table in the database with which this entity is associated.
 public class User {
 
-    @Id  // Marks this field as the primary key of the entity.
+    @Id  // Marks this field as the primary key of the entity
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Configures the way of increment of the specified column(field).
 
     /**

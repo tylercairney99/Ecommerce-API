@@ -65,6 +65,9 @@ public class OrderServiceTest {
      */
     private User myTestUser;
 
+    /**
+     * Sets up a dummy order and user for testing before each test.
+     */
     @BeforeEach
     void setUp() {
         // Initialize a dummy order for use in tests
@@ -174,6 +177,9 @@ public class OrderServiceTest {
         verify(myOrderRepository, never()).save(any(Order.class));
     }
 
+    /**
+     * Tests that adding an order correctly saves all fields.
+     */
     @Test
     void whenAddOrder_thenAllFieldsAreCorrect() {
         // Arrange
@@ -192,6 +198,9 @@ public class OrderServiceTest {
         verify(myOrderRepository).save(myOrder);
     }
 
+    /**
+     * Tests that updating an order correctly updates all fields.
+     */
     @Test
     void whenUpdateOrder_thenAllFieldsAreUpdated() {
         // Arrange
@@ -215,8 +224,9 @@ public class OrderServiceTest {
         assertEquals(updatedInfo.getMyUser().getUserID(), capturedOrder.getMyUser().getUserID(), "Order user should match");
     }
 
-
-
+    /**
+     * Tests that updating an order's associated user updates the user in the order.
+     */
     @Test
     void whenUpdateOrderWithModifiedUser_thenUserIsUpdated() {
         // Arrange
@@ -234,6 +244,9 @@ public class OrderServiceTest {
                 "The user in the updated order should have the new username");
     }
 
+    /**
+     * Tests that adding a null order throws an IllegalArgumentException.
+     */
     @Test
     void whenAddNullOrder_thenIllegalArgumentExceptionIsThrown() {
         // Arrange
@@ -245,6 +258,9 @@ public class OrderServiceTest {
                 "Adding a null order should throw IllegalArgumentException");
     }
 
+    /**
+     * Tests that updating an order with invalid data throws an IllegalArgumentException.
+     */
     @Test
     void whenUpdateOrderWithInvalidData_thenIllegalArgumentExceptionIsThrown() {
         // Arrange
@@ -256,10 +272,6 @@ public class OrderServiceTest {
                 () -> myOrderService.updateOrder(invalidOrder.getOrderID(), invalidOrder),
                 "Updating an order with invalid data should throw IllegalArgumentException");
     }
-
-
-
-
 
     // Potentially add more tests for edge cases, but as of now there is full method coverage for OrderService
 

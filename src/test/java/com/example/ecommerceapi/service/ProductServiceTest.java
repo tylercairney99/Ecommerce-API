@@ -42,7 +42,7 @@ public class ProductServiceTest {
     private Product myProduct;
 
     /**
-     * Tests for ProductService class.
+     * Sets up a dummy product for testing before each test.
      */
     @BeforeEach
     void setUp() {

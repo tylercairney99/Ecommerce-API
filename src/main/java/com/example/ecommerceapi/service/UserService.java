@@ -40,8 +40,13 @@ public class UserService {
      *
      * @param theUser (The user to be added)
      * @return The added user
+     * @throws IllegalArgumentException If user is null
      */
     public User addUser(final User theUser) { // Create
+        if (theUser == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
         return myUserRepository.save(theUser);
     }
 
@@ -73,6 +78,19 @@ public class UserService {
      * @throws ResponseStatusException If the user with the given ID cannot be found.
      */
     public User updateUser(final Long theUserID, final User theUserDetails) { // Update
+        if (theUserDetails == null) {
+            throw new IllegalArgumentException("User details cannot be null");
+        }
+        if (theUserDetails.getUsername() == null || theUserDetails.getUsername().trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be null or empty");
+        }
+        if (theUserDetails.getPassword() == null || theUserDetails.getPassword().trim().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
+        if (theUserDetails.getEmail() == null || theUserDetails.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be null or empty");
+        }
+
         final User user = myUserRepository.findById(theUserID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + theUserID + " not found"));
 
