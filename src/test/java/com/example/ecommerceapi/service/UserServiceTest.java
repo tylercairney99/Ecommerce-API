@@ -21,6 +21,9 @@ import static org.mockito.Mockito.*;
 
 /**
  * The UserServiceTest class contains tests for the UserService class.
+ *
+ * @author Tyler Cairney
+ * @version 1.0
  */
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {

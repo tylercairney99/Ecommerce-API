@@ -20,6 +20,9 @@ import static org.mockito.Mockito.*;
 
 /**
  * The ProductServiceTest class contains tests for the ProductService class.
+ *
+ * @author Tyler Cairney
+ * @version 1.0
  */
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {

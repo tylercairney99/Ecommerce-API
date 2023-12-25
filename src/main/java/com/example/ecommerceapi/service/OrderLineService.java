@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -42,6 +43,16 @@ public class OrderLineService {
      * @return The added order line
      */
     public OrderLine addOrderLine(final OrderLine theOrderLine) { // Create
+        if (theOrderLine == null) {
+            throw new IllegalArgumentException("Order Line cannot be null");
+        }
+        if (theOrderLine.getQuantity() < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative");
+        }
+        if (theOrderLine.getPrice() == null || theOrderLine.getPrice().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Price cannot be null or negative");
+        }
+
         return myOrderLineRepository.save(theOrderLine);
     }
 
@@ -74,6 +85,16 @@ public class OrderLineService {
      * @throws ResponseStatusException If the order line with the given ID cannot be found
      */
     public OrderLine updateOrderLine(final Long theOrderLineID, final OrderLine theOrderLineDetails) { // Update
+        if (theOrderLineDetails == null) {
+            throw new IllegalArgumentException("Order line details cannot be null");
+        }
+        if (theOrderLineDetails.getQuantity() < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative");
+        }
+        if (theOrderLineDetails.getPrice() != null && theOrderLineDetails.getPrice().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Price cannot be negative");
+        }
+
         final OrderLine orderLine = myOrderLineRepository.findById(theOrderLineID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "OrderLine with ID " + theOrderLineID + " not found"));
 
