@@ -99,7 +99,6 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$", hasSize(1))) // Expecting the JSON response to be an array with a single element (the sample user).
                 .andExpect(jsonPath("$[0].username", is(myUserDTO.getUsername()))); // Expecting the username of the first element in
                                                                                              // the array to match the sample user's username.
-
     }
 
     /**

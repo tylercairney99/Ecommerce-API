@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
+import jakarta.validation.Valid;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -95,7 +96,7 @@ public class OrderController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // Endpoint to create a new order, returns HTTP 201 status on creation
-    public OrderDTO addOrder(@RequestBody final Order theOrderDTO) {
+    public OrderDTO addOrder(@Valid @RequestBody final OrderDTO theOrderDTO) {
         final Order order = myModelMapper.map(theOrderDTO, Order.class);
         final Order createdOrder = myOrderService.addOrder(order);
         return myModelMapper.map(createdOrder, OrderDTO.class);
@@ -113,7 +114,7 @@ public class OrderController {
      * @return The updated order as a OrderDTO.
      */
     @PutMapping("/{theOrderID}") // Endpoint to update an order by its ID
-    public OrderDTO updateOrder(@PathVariable final Long theOrderID, @RequestBody final OrderDTO theOrderDTO) {
+    public OrderDTO updateOrder(@PathVariable final Long theOrderID, @Valid @RequestBody final OrderDTO theOrderDTO) {
         final Order orderToUpdate = myModelMapper.map(theOrderDTO, Order.class);
         final Order updatedOrder = myOrderService.updateOrder(theOrderID, orderToUpdate);
         return myModelMapper.map(updatedOrder, OrderDTO.class);
