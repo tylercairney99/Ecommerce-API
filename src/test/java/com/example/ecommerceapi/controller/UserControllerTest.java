@@ -49,7 +49,6 @@ public class UserControllerTest {
     /**
      * The UserController instance with the injected mock UserService.
      */
-
     @InjectMocks
     private UserController myUserController;
 
@@ -114,7 +113,7 @@ public class UserControllerTest {
         myMockMvc.perform(get("/users/" + userID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.username",is(myUserDTO.getUsername())));
+                .andExpect(jsonPath("$.username", is(myUserDTO.getUsername())));
     }
 
     /**
@@ -185,13 +184,13 @@ public class UserControllerTest {
      */
     @Test
     public void whenAddUserWithInvalidData_thenBadRequest() throws Exception {
-        UserDTO invalidUserDTO = new UserDTO(); // Assuming default constructor sets invalid values
+        final UserDTO invalidUserDTO = new UserDTO();
         final String userJson = new ObjectMapper().writeValueAsString(invalidUserDTO);
 
         myMockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
-                .andExpect(status().isBadRequest());
+                        .andExpect(status().isBadRequest());
     }
 
     /**
@@ -200,13 +199,13 @@ public class UserControllerTest {
     @Test
     public void whenUpdateUserWithInvalidData_thenBadRequest() throws Exception {
         final Long userID = 1L;
-        UserDTO invalidUserDTO = new UserDTO(); // Invalid DTO
+        final UserDTO invalidUserDTO = new UserDTO(); // Invalid DTO
         final String userJson = new ObjectMapper().writeValueAsString(invalidUserDTO);
 
         myMockMvc.perform(put("/users/" + userID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
-                .andExpect(status().isBadRequest());
+                        .andExpect(status().isBadRequest());
     }
 
     /**
@@ -226,4 +225,5 @@ public class UserControllerTest {
         myMockMvc.perform(delete("/users/abc")) // Non-numeric ID
                 .andExpect(status().isBadRequest());
     }
+
 }
