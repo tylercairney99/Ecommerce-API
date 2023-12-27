@@ -212,7 +212,7 @@ public class OrderControllerTest {
      * Tests retrieving an order by a non-existent ID and expects a Not Found response.
      */
     @Test
-    public void whenGetUserByNonExistentID_thenThrowNotFoundException() throws Exception {
+    public void whenGetOrderByNonExistentID_thenThrowNotFoundException() throws Exception {
         final Long nonExistentOrderID = 999L;
         given(myOrderService.getOrderByID(nonExistentOrderID)).willReturn(Optional.empty());
 
@@ -257,7 +257,6 @@ public class OrderControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-
     /**
      * Tests retrieving an order with an invalid ID type (non-numeric) and expects a Bad Request response.
      */
@@ -271,7 +270,7 @@ public class OrderControllerTest {
      * Tests deleting an order with an invalid ID type (non-numeric) and expects a Bad Request response.
      */
     @Test
-    public void whenDeleteUserByInvalidIDType_thenBadRequest() throws Exception {
+    public void whenDeleteOrderByInvalidIDType_thenBadRequest() throws Exception {
         myMockMvc.perform(delete("/orders/abc")) // Non-numeric ID
                 .andExpect(status().isBadRequest());
     }

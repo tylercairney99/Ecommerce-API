@@ -17,6 +17,11 @@ import java.math.BigDecimal;
 public class OrderLineDTO {
 
     /**
+     * The unique identifier of the order line.
+     */
+    private Long myOrderLineID;
+
+    /**
      * The unique identifier of the product in the order line.
      */
     @NotNull(message = "Product ID is required")
@@ -54,8 +59,26 @@ public class OrderLineDTO {
     // Getters and Setters with JavaDoc comments
 
     /**
+     * Gets the order line ID.
+     *
+     * @return the order line ID
+     */
+    public Long getOrderLineID() {
+        return myOrderLineID;
+    }
+
+    /**
+     * Sets the order line ID.
+     *
+     * @param theOrderLineID the new order line ID
+     */
+    public void setOrderLineID(final Long theOrderLineID) {
+        this.myOrderLineID = theOrderLineID;
+    }
+
+    /**
      * Gets the product ID of the order line.
-     *zc
+     *
      * @return the product ID.
      */
     public Long getProductId() {
