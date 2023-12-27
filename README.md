@@ -21,6 +21,8 @@ This e-commerce API is a personal project that utilizes a RESTful web service de
 - H2 Database
 - Maven
 - Java
+- PostgreSQL
+  
 
 ## Getting Started
 
