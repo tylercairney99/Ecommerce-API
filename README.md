@@ -7,10 +7,11 @@ This e-commerce API is a personal project that utilizes a RESTful web service de
 ## Features
 
 - RESTful endpoints for product management (create, read, update, delete).
-- User authentication and authorization (coming soon).
 - Order processing and history retrieval.
 - Pagination and sorting for product listings.
 - Data validation and error handling.
+- Robust Validation: Ensure data integrity with comprehensive validation and error handling.
+- PostgreSQL Database Integration: Persistent storage for scalable data management.
 - In-memory H2 database seeded with dummy data for testing and demonstration purposes.
 
 ## Technologies
