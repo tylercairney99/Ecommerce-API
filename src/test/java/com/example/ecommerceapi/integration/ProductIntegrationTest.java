@@ -91,7 +91,7 @@ public class ProductIntegrationTest {
      */
     @Test
     @Transactional
-    public void whenGetAllProcuts_thenProductsAreReturned() throws Exception {
+    public void whenGetAllProducts_thenProductsAreReturned() throws Exception {
         final Product savedProduct = myProductRepository.save(new Product("Test Product",
                 new BigDecimal("19.99"), 10));
 
@@ -157,9 +157,9 @@ public class ProductIntegrationTest {
     @Test
     @Transactional
     public void whenGetNonExistentProduct_thenNotFound() throws Exception {
-        final Long nonExistentProductId = 999L;
+        final Long nonExistentProductID = 999L;
 
-        myMockMvc.perform(get("/products/" + nonExistentProductId))
+        myMockMvc.perform(get("/products/" + nonExistentProductID))
                 .andExpect(status().isNotFound());
     }
 
