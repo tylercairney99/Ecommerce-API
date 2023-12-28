@@ -59,9 +59,9 @@ The API will be accessible at 'http://localhost:8080'.
 
 ### Product Endpoints:
 
-GET /api/products - Retrieve all products.
-
 POST /api/products - Create a new product.
+
+GET /api/products - Retrieve all products.
 
 GET /api/products/{id} - Retrieve a product by its ID.
 
@@ -71,9 +71,9 @@ DELETE /api/products/{id} - Delete a product.
 
 ### User Endpoints:
 
-GET /api/users - Retrieve all users.
-
 POST /api/users - Create a new user.
+
+GET /api/users - Retrieve all users.
 
 GET /api/users/{id} - Retrieve a user by their ID.
 
@@ -83,9 +83,9 @@ DELETE /api/users/{id} - Delete a user.
 
 ### Order Endpoints:
 
-GET /api/orders - Retrieve all orders.
-
 POST /api/orders - Create a new order.
+
+GET /api/orders - Retrieve all orders.
 
 GET /api/orders/{id} - Retrieve an order by its ID.
 
@@ -95,9 +95,9 @@ DELETE /api/orders/{id} - Delete an order.
 
 ### Order Line Endpoints:
 
-GET /api/orderlines - Retrieve all order lines.
-
 POST /api/orderlines - Add a new order line.
+
+GET /api/orderlines - Retrieve all order lines.
 
 GET /api/orderlines/{id} - Retrieve an order line by its ID.
 
