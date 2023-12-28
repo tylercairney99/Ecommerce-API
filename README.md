@@ -7,10 +7,11 @@ This e-commerce API is a personal project that utilizes a RESTful web service de
 ## Features
 
 - RESTful endpoints for product management (create, read, update, delete).
-- User authentication and authorization (coming soon).
 - Order processing and history retrieval.
 - Pagination and sorting for product listings.
 - Data validation and error handling.
+- Robust Validation: Ensure data integrity with comprehensive validation and error handling.
+- PostgreSQL Database Integration: Persistent storage for scalable data management.
 - In-memory H2 database seeded with dummy data for testing and demonstration purposes.
 
 ## Technologies
@@ -20,6 +21,8 @@ This e-commerce API is a personal project that utilizes a RESTful web service de
 - H2 Database
 - Maven
 - Java
+- PostgreSQL
+  
 
 ## Getting Started
 
@@ -54,6 +57,8 @@ The API will be accessible at 'http://localhost:8080'.
 
 ## Usage
 
+### Product Endpoints:
+
 GET /api/products - Retrieve all products.
 
 POST /api/products - Create a new product.
@@ -64,8 +69,44 @@ PUT /api/products/{id} - Update a product's information.
 
 DELETE /api/products/{id} - Delete a product.
 
-(more endpoints to come)
+### User Endpoints:
+
+GET /api/users - Retrieve all users.
+
+POST /api/users - Create a new user.
+
+GET /api/users/{id} - Retrieve a user by their ID.
+
+PUT /api/users/{id} - Update a user's information.
+
+DELETE /api/users/{id} - Delete a user.
+
+### Order Endpoints:
+
+GET /api/orders - Retrieve all orders.
+
+POST /api/orders - Create a new order.
+
+GET /api/orders/{id} - Retrieve an order by its ID.
+
+PUT /api/orders/{id} - Update an order's details.
+
+DELETE /api/orders/{id} - Delete an order.
+
+### Order Line Endpoints:
+
+GET /api/orderlines - Retrieve all order lines.
+
+POST /api/orderlines - Add a new order line.
+
+GET /api/orderlines/{id} - Retrieve an order line by its ID.
+
+PUT /api/orderlines/{id} - Update an order line's details.
+
+DELETE /api/orderlines/{id} - Delete an order line.
+
+(possible more endpoints to come)
 
 ## Contact
 
-For any inquiries, please reach out to Tyler Cairney at tylercairney99@gmail.com
+For any inquiries, please reach out to 
