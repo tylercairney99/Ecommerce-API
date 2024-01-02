@@ -1,6 +1,8 @@
 package com.example.ecommerceapi.service;
 
 import com.example.ecommerceapi.api.model.OrderLine;
+import com.example.ecommerceapi.api.dto.OrderLineDTO;
+import com.example.ecommerceapi.api.model.Product;
 import com.example.ecommerceapi.api.repository.OrderLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,10 @@ import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.util.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Service class for handling order operations.
@@ -25,6 +31,10 @@ public class OrderLineService {
      */
     private final OrderLineRepository myOrderLineRepository;
 
+    private final ProductService myProductService;
+
+    private static final Logger logger =  LoggerFactory.getLogger(OrderLineService.class);
+
     /**
      * Constructs a OrderLineService with the provided product repository.
      *
@@ -32,29 +42,47 @@ public class OrderLineService {
      * @param theOrderLineRepository The product repository to be used by this service.
      */
     @Autowired
-    public OrderLineService(final OrderLineRepository theOrderLineRepository) {
+    public OrderLineService(final OrderLineRepository theOrderLineRepository, final ProductService theProductService) {
         this.myOrderLineRepository = theOrderLineRepository;
+        this.myProductService = theProductService;
     }
 
     /**
      * Adds a new order line to the repository.
      *
-     * @param theOrderLine (The order line to be added)
+     * @param orderLineDTO (The order line to be added)
      * @return The added order line
      */
-    public OrderLine addOrderLine(final OrderLine theOrderLine) { // Create
-        if (theOrderLine == null) {
-            throw new IllegalArgumentException("Order Line cannot be null");
-        }
-        if (theOrderLine.getQuantity() < 0) {
-            throw new IllegalArgumentException("Quantity cannot be negative");
-        }
-        if (theOrderLine.getPrice() == null || theOrderLine.getPrice().compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Price cannot be null or negative");
+    public OrderLine addOrderLine(final OrderLineDTO orderLineDTO) {
+        if (orderLineDTO == null) {
+            throw new IllegalArgumentException("Order Line DTO cannot be null");
         }
 
-        return myOrderLineRepository.save(theOrderLine);
+        // Log DTO fields
+        logger.info("DTO - Unit Price: {}, Quantity: {}", orderLineDTO.getUnitPrice(), orderLineDTO.getQuantity());
+
+        // Retrieve the Product entity based on the ID in the DTO
+        Product product = myProductService.getProductByID(orderLineDTO.getProductId())
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + orderLineDTO.getProductId()));
+
+        // Create a new OrderLine entity and map properties from DTO
+        OrderLine orderLine = new OrderLine();
+        orderLine.setProduct(product);
+        orderLine.setQuantity(orderLineDTO.getQuantity());
+        orderLine.setPrice(orderLineDTO.getUnitPrice()); // Set unit price
+
+        // Calculate and set the total price for the order line
+        BigDecimal lineTotal = orderLineDTO.getUnitPrice().multiply(BigDecimal.valueOf(orderLineDTO.getQuantity()));
+        orderLine.setLineTotal(lineTotal);
+
+        // Log final OrderLine entity fields
+        logger.info("Entity - Unit Price: {}, Line Total: {}", orderLine.getPrice(), orderLine.getLineTotal());
+
+        return myOrderLineRepository.save(orderLine);
     }
+
+
+
 
     /**
      * Retrieves all order lines from the repository.
