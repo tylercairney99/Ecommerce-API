@@ -1,5 +1,9 @@
 package com.example.ecommerceapi.service;
 
+import com.example.ecommerceapi.api.dto.OrderDTO;
+import com.example.ecommerceapi.api.dto.OrderLineDTO;
+import com.example.ecommerceapi.api.model.OrderLine;
+import com.example.ecommerceapi.api.model.Product;
 import com.example.ecommerceapi.api.model.User;
 import com.example.ecommerceapi.api.model.Order;
 import com.example.ecommerceapi.api.repository.OrderRepository;
@@ -15,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +69,9 @@ public class OrderServiceTest {
      * A dummy user used for test cases.
      */
     private User myTestUser;
+
+    @Mock
+    private ProductService myProductService;
 
     /**
      * Sets up a dummy order and user for testing before each test.
@@ -204,25 +212,47 @@ public class OrderServiceTest {
     @Test
     void whenUpdateOrder_thenAllFieldsAreUpdated() {
         // Arrange
-        when(myOrderRepository.findById(myOrder.getOrderID())).thenReturn(Optional.of(myOrder));
-        ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
+        Long orderId = 1L;
+        User testUser = new User("TestUser", "Password123", "testuser@example.com");
+        testUser.setUserID(1L);
+        Product testProduct = new Product("ProductName", new BigDecimal("30.00"), 100);
 
-        // Use a past or current date for the order update
-        Order updatedInfo = new Order(LocalDateTime.now().minusDays(1), "Shipped", myTestTotalPrice.add(BigDecimal.valueOf(50)), myTestUser);
-        updatedInfo.setOrderID(myOrder.getOrderID());
+        when(myProductService.getProductByID(testProduct.getID())).thenReturn(Optional.of(testProduct));
+
+
+        // Creating a mock order and setting it up
+        Order existingOrder = new Order(LocalDateTime.now(), "Created", new BigDecimal("100.00"), testUser);
+        existingOrder.setOrderID(orderId);
+        existingOrder.addOrderLine(new OrderLine(existingOrder, testProduct, 2, new BigDecimal("30.00"))); // Existing order line
+
+        // Mocking repository and service responses
+        when(myOrderRepository.findById(orderId)).thenReturn(Optional.of(existingOrder));
+        when(myProductService.getProductByID(testProduct.getID())).thenReturn(Optional.of(testProduct));
+
+        // Prepare updated information
+        LocalDateTime updatedOrderDate = LocalDateTime.now().minusDays(1);
+        BigDecimal updatedTotalPrice = new BigDecimal("150.00");
+        String updatedStatus = "Shipped";
+
+        // Create a new Order object with updated information
+        Order updatedOrder = new Order(updatedOrderDate, updatedStatus, updatedTotalPrice, testUser);
+        updatedOrder.setOrderID(orderId);
+        updatedOrder.addOrderLine(new OrderLine(updatedOrder, testProduct, 5, new BigDecimal("30.00")));
 
         // Act
-        myOrderService.updateOrder(myOrder.getOrderID(), updatedInfo);
+        myOrderService.updateOrder(orderId, updatedOrder);
 
         // Assert
+        ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
         verify(myOrderRepository).save(orderCaptor.capture());
         Order capturedOrder = orderCaptor.getValue();
         assertNotNull(capturedOrder, "Updated order should not be null");
-        assertEquals(updatedInfo.getOrderDate(), capturedOrder.getOrderDate(), "Order date should be updated");
-        assertEquals(updatedInfo.getStatus(), capturedOrder.getStatus(), "Order status should be updated");
-        assertEquals(updatedInfo.getTotalPrice(), capturedOrder.getTotalPrice(), "Order total price should be updated");
-        assertEquals(updatedInfo.getMyUser().getUserID(), capturedOrder.getMyUser().getUserID(), "Order user should match");
+        assertEquals(updatedOrderDate, capturedOrder.getOrderDate(), "Order date should be updated");
+        assertEquals(updatedTotalPrice, capturedOrder.getTotalPrice(), "Order total price should be updated");
+        assertEquals(testUser.getUserID(), capturedOrder.getMyUser().getUserID(), "Order user should match");
+        // Additional assertions for order lines can be added here if needed
     }
+
 
     /**
      * Tests that updating an order's associated user updates the user in the order.
@@ -259,19 +289,20 @@ public class OrderServiceTest {
     }
 
     /**
-     * Tests that updating an order with invalid data throws an IllegalArgumentException.
+     * Tests that updating an order with invalid data throws an ResponseStatusException.
      */
     @Test
-    void whenUpdateOrderWithInvalidData_thenIllegalArgumentExceptionIsThrown() {
+    void whenUpdateOrderWithInvalidData_thenResponseStatusExceptionIsThrown() {
         // Arrange
         Order invalidOrder = new Order(LocalDateTime.now().plusDays(10), "InvalidStatus", BigDecimal.valueOf(-100), myTestUser);
         invalidOrder.setOrderID(1L);
 
         // Act & Assert
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ResponseStatusException.class,
                 () -> myOrderService.updateOrder(invalidOrder.getOrderID(), invalidOrder),
-                "Updating an order with invalid data should throw IllegalArgumentException");
+                "Updating an order with invalid data should throw ResponseStatusException");
     }
+
 
     // Potentially add more tests for edge cases, but as of now there is full method coverage for OrderService
 
