@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents an order entity in the e-commerce system.
@@ -47,6 +49,15 @@ public class Order {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id") // Foreign key relationship
     @Getter // Lombok generates the getter getUser() method
     private User myUser;
+
+    /**
+     * Represents a one-to-many relationship between 'myOrder' and 'OrderLine'.
+     * 'myOrderLines' is a collection of 'OrderLine' objects associated with 'myOrder'.
+     * Cascade type 'ALL' means changes to 'myOrder' cascade to 'myOrderLines'.
+     * Orphan removal is enabled, removing orphaned 'OrderLine' objects.
+     */
+    @OneToMany(mappedBy = "myOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderLine> myOrderLines = new ArrayList<>();
 
     /**
      * Default constructor for JPA.
@@ -151,4 +162,34 @@ public class Order {
     public void setUser(final User theUser) {
         this.myUser = theUser;
     }
+
+    /**
+     * Sets the list of order lines associated with this order.
+     *
+     * @param orderLines The list of order lines to set for this order.
+     */
+    public void setOrderLines(List<OrderLine> orderLines) {
+        this.myOrderLines = orderLines;
+    }
+
+    /**
+     * Adds an order line to this order and sets the relationship between them.
+     *
+     * @param orderLine The order line to add to this order.
+     */
+    public void addOrderLine(OrderLine orderLine) {
+        orderLine.setOrder(this); // Set the relationship
+        this.myOrderLines.add(orderLine);
+    }
+
+    /**
+     * Retrieves the list of order lines associated with this order.
+     *
+     * @return The list of order lines associated with this order.
+     */
+    public List<OrderLine> getOrderLines() {
+        return myOrderLines;
+    }
+
+
 }
