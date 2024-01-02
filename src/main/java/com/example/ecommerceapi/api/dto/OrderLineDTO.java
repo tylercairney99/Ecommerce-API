@@ -132,9 +132,12 @@ public class OrderLineDTO {
      */
     public void setUnitPrice(final BigDecimal theUnitPrice) {
         this.myUnitPrice = theUnitPrice;
-        // Recalculate line total if unit price is set after initialization
-        this.myLineTotal = theUnitPrice.multiply(new BigDecimal(this.myQuantity));
+        // Recalculate line total if quantity is already set
+        if (this.myQuantity > 0) {
+            this.myLineTotal = theUnitPrice.multiply(new BigDecimal(this.myQuantity));
+        }
     }
+
 
     /**
      * Gets the total price for this order line item.
