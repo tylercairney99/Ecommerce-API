@@ -48,6 +48,12 @@ public class OrderLine {
     private BigDecimal myPrice;
 
     /**
+     * The total price for this order line item.
+     */
+    private BigDecimal myLineTotal;
+
+
+    /**
      * Default constructor for JPA.
      * Required for JPA entity initialization.
      */
@@ -68,6 +74,7 @@ public class OrderLine {
         this.myProduct = theProduct;
         this.myQuantity = theQuantity;
         this.myPrice = thePrice;
+        this.myLineTotal = thePrice.multiply(BigDecimal.valueOf(theQuantity));
     }
 
     /**
@@ -158,5 +165,15 @@ public class OrderLine {
      */
     public void setPrice(final BigDecimal thePrice) {
         this.myPrice = thePrice;
+    }
+
+    // TODO ADDED
+
+    public BigDecimal getLineTotal() {
+        return myLineTotal;
+    }
+
+    public void setLineTotal(final BigDecimal theLineTotal) {
+        this.myLineTotal = theLineTotal;
     }
 }
