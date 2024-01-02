@@ -151,7 +151,7 @@ public class OrderLineControllerTest {
         mockOrderLine.setPrice(validOrderLineDTO.getUnitPrice());
         // Additional mock settings if necessary
 
-        given(myOrderLineService.addOrderLine(any(OrderLine.class))).willReturn(mockOrderLine);
+        given(myOrderLineService.addOrderLine(any(OrderLineDTO.class))).willReturn(mockOrderLine);
 
         // Convert OrderLineDTO to JSON
         ObjectMapper objectMapper = new ObjectMapper();
