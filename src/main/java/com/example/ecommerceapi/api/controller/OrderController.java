@@ -95,12 +95,14 @@ public class OrderController {
      * @return The created user as a OrderDTO.
      */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // Endpoint to create a new order, returns HTTP 201 status on creation
+    @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO addOrder(@Valid @RequestBody final OrderDTO theOrderDTO) {
-        final Order order = myModelMapper.map(theOrderDTO, Order.class);
-        final Order createdOrder = myOrderService.addOrder(order);
+        Order order = myModelMapper.map(theOrderDTO, Order.class);
+        Order createdOrder = myOrderService.addOrder(order);
         return myModelMapper.map(createdOrder, OrderDTO.class);
     }
+
+
 
     /**
      * Updates the information of an existing order.
@@ -113,10 +115,12 @@ public class OrderController {
      * @param theOrderDTO (The DTO containing the order's updated data)
      * @return The updated order as a OrderDTO.
      */
-    @PutMapping("/{theOrderID}") // Endpoint to update an order by its ID
+    @PutMapping("/{theOrderID}")
     public OrderDTO updateOrder(@PathVariable final Long theOrderID, @Valid @RequestBody final OrderDTO theOrderDTO) {
-        final Order orderToUpdate = myModelMapper.map(theOrderDTO, Order.class);
-        final Order updatedOrder = myOrderService.updateOrder(theOrderID, orderToUpdate);
+        Order orderToUpdate = myModelMapper.map(theOrderDTO, Order.class);
+        Order updatedOrder = myOrderService.updateOrder(theOrderID, orderToUpdate);
+
+        // Ensure that the response has all the necessary calculated fields
         return myModelMapper.map(updatedOrder, OrderDTO.class);
     }
 
