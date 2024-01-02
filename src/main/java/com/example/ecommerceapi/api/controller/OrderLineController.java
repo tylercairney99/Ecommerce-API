@@ -100,7 +100,7 @@ public class OrderLineController {
     @ResponseStatus(HttpStatus.CREATED) // Endpoint to create a new order line, returns HTTP 201 status on creation
     public OrderLineDTO addOrderLine(@Valid @RequestBody final OrderLineDTO theOrderLineDTO) {
         final OrderLine orderLine = myModelMapper.map(theOrderLineDTO, OrderLine.class);
-        final OrderLine createdOrderLine = myOrderLineService.addOrderLine(orderLine);
+        final OrderLine createdOrderLine = myOrderLineService.addOrderLine(theOrderLineDTO);
         return myModelMapper.map(createdOrderLine, OrderLineDTO.class);
     }
 
