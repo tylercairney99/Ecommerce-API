@@ -1,5 +1,6 @@
 package com.example.ecommerceapi.service;
 
+import com.example.ecommerceapi.api.dto.OrderLineDTO;
 import com.example.ecommerceapi.api.model.OrderLine;
 import com.example.ecommerceapi.api.model.Order;
 import com.example.ecommerceapi.api.model.Product;
@@ -57,6 +58,9 @@ public class OrderLineServiceTest {
      */
     private Product myProduct;
 
+    @Mock
+    private ProductService myProductService;
+
     /**
      * Sets up a dummy order line for testing before each test.
      */
@@ -75,16 +79,27 @@ public class OrderLineServiceTest {
     @Test
     void whenAddOrderLine_thenSaveOrderLine() {
         // Arrange
+        OrderLineDTO orderLineDTO = new OrderLineDTO();
+        orderLineDTO.setProductId(myOrderLine.getProduct().getID()); // Assuming getProduct() and getId() methods
+        orderLineDTO.setQuantity(myOrderLine.getQuantity());
+        orderLineDTO.setUnitPrice(myOrderLine.getPrice());
+
+        // Mock the behavior of ProductService to return a Product when getProductByID is called
+        when(myProductService.getProductByID(orderLineDTO.getProductId())).thenReturn(Optional.of(myProduct));
+
+        // Mock the behavior of OrderLineRepository to return the order line when save is called
         when(myOrderLineRepository.save(any(OrderLine.class))).thenReturn(myOrderLine);
 
         // Act
-        OrderLine savedOrderLine = myOrderLineService.addOrderLine(myOrderLine);
+        OrderLine savedOrderLine = myOrderLineService.addOrderLine(orderLineDTO);
 
         // Assert
         assertNotNull(savedOrderLine, "Saved order line should not be null");
         assertEquals(myOrderLine.getOrderLineID(), savedOrderLine.getOrderLineID(), "Saved order line ID should match the added order line ID");
-        verify(myOrderLineRepository).save(myOrderLine);
+        verify(myOrderLineRepository).save(any(OrderLine.class));
     }
+
+
 
     /**
      * Tests that retrieving all order lines returns a non-empty list.
@@ -192,10 +207,20 @@ public class OrderLineServiceTest {
      */
     @Test
     void whenAddOrderLineWithInvalidData_thenIllegalArgumentExceptionIsThrown() {
-        OrderLine invalidOrderLine = new OrderLine(myOrder, myProduct, -1, BigDecimal.valueOf(-100.00));
-        assertThrows(IllegalArgumentException.class, () -> myOrderLineService.addOrderLine(invalidOrderLine),
+        OrderLineDTO invalidOrderLineDTO = new OrderLineDTO();
+        invalidOrderLineDTO.setProductId(-1L); // Invalid product ID
+        invalidOrderLineDTO.setQuantity(-1); // Invalid quantity
+        invalidOrderLineDTO.setUnitPrice(BigDecimal.valueOf(-100.00)); // Invalid price
+
+        // Mock any required dependencies used in addOrderLine method
+        // Example: when(someDependency.someMethod(...)).thenReturn(someValue);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> myOrderLineService.addOrderLine(invalidOrderLineDTO),
                 "Adding an order line with invalid data should throw IllegalArgumentException");
     }
+
+
 
     /**
      * Tests that attempting to update an order line with a non-existent product or order throws an exception.

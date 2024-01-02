@@ -1,6 +1,10 @@
 package com.example.ecommerceapi.service;
 
+import com.example.ecommerceapi.api.dto.OrderLineDTO;
+import com.example.ecommerceapi.service.ProductService;
 import com.example.ecommerceapi.api.model.Order;
+import com.example.ecommerceapi.api.model.OrderLine;
+import com.example.ecommerceapi.api.model.Product;
 import com.example.ecommerceapi.api.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service class for handling order operations.
@@ -26,6 +31,8 @@ public class OrderService {
      */
     private final OrderRepository myOrderRepository;
 
+    private final ProductService myProductService;
+
     /**
      * Constructs a OrderService with the provided order repository.
      *
@@ -33,10 +40,12 @@ public class OrderService {
      * @param theOrderRepository The order repository to be used by this service.
      */
     @Autowired
-    public OrderService(final OrderRepository theOrderRepository) {
+    public OrderService(final OrderRepository theOrderRepository, final ProductService theProductService) {
         this.myOrderRepository = theOrderRepository;
+        this.myProductService = theProductService;
     }
 
+    // TODO ADDED THIS
     /**
      * Adds a new order to the repository.
      *
@@ -44,10 +53,31 @@ public class OrderService {
      * @return The added order
      * @throws IllegalArgumentException If order is null.
      */
-    public Order addOrder(final Order theOrder) { // Create
+    public Order addOrder(final Order theOrder) {
         if (theOrder == null) {
             throw new IllegalArgumentException("Order cannot be null");
         }
+
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        for (OrderLine line : theOrder.getOrderLines()) {
+            // Validate that price and quantity are not null
+            if (line.getPrice() == null || line.getQuantity() == 0) {
+                throw new IllegalArgumentException("OrderLine must have a valid price and quantity");
+            }
+
+            // Calculate the total for this line and add it to the order's total amount
+            BigDecimal lineTotal = line.getPrice().multiply(BigDecimal.valueOf(line.getQuantity()));
+            totalAmount = totalAmount.add(lineTotal);
+
+            // Set lineTotal in OrderLine (if you have a setter for this in OrderLine)
+            line.setLineTotal(lineTotal);
+
+            // Set back-reference from OrderLine to Order
+            line.setOrder(theOrder);
+        }
+
+        // Set the total price of the order
+        theOrder.setTotalPrice(totalAmount);
 
         return myOrderRepository.save(theOrder);
     }
@@ -80,36 +110,49 @@ public class OrderService {
      * @throws IllegalArgumentException If the order is null, date is in the future, or price is negative.
      * @throws ResponseStatusException If the order with the given ID cannot be found.
      */
-    public Order updateOrder(final Long theOrderID, final Order theOrderDetails) { // Update
+    public Order updateOrder(final Long theOrderID, final Order theOrderDetails) {
         if (theOrderDetails == null) {
-            throw new IllegalArgumentException("Order details cannot be null");
-        }
-        if (theOrderDetails.getOrderDate().isAfter(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Order date cannot be in the future");
-        }
-        if (theOrderDetails.getTotalPrice().compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Total price cannot be negative");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order details cannot be null");
         }
 
-        final Order order = myOrderRepository.findById(theOrderID)
+        final Order existingOrder = myOrderRepository.findById(theOrderID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with ID " + theOrderID + " not found"));
 
-        if (theOrderDetails.getOrderDate() != null) {
-            order.setOrderDate(theOrderDetails.getOrderDate());
+        // Check for invalid order data
+        if (theOrderDetails.getOrderDate() != null && theOrderDetails.getOrderDate().isAfter(LocalDateTime.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order date cannot be in the future");
         }
-        if (theOrderDetails.getStatus() != null) {
-            order.setStatus(theOrderDetails.getStatus());
-        }
-        if (theOrderDetails.getTotalPrice() != null) {
-            order.setTotalPrice(theOrderDetails.getTotalPrice());
-        }
-        if (theOrderDetails.getMyUser() != null) {
-            order.setUser(theOrderDetails.getMyUser());
+        if (theOrderDetails.getTotalPrice() != null && theOrderDetails.getTotalPrice().compareTo(BigDecimal.ZERO) < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Total price cannot be negative");
         }
 
-        // can add more logic to change orders here
+        // Update order fields
+        existingOrder.setOrderDate(theOrderDetails.getOrderDate() != null ? theOrderDetails.getOrderDate() : existingOrder.getOrderDate());
+        existingOrder.setStatus(theOrderDetails.getStatus() != null ? theOrderDetails.getStatus() : existingOrder.getStatus());
+        existingOrder.setUser(theOrderDetails.getMyUser() != null ? theOrderDetails.getMyUser() : existingOrder.getMyUser());
 
-        return myOrderRepository.save(order);
+        // Clear and update order lines
+        existingOrder.getOrderLines().clear();
+        List<OrderLine> updatedOrderLines = theOrderDetails.getOrderLines().stream()
+                .map(orderLineDTO -> {
+                    Product product = myProductService.getProductByID(orderLineDTO.getProduct().getID())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product not found with ID: " + orderLineDTO.getProduct().getID()));
+
+                    OrderLine newOrderLine = new OrderLine(existingOrder, product, orderLineDTO.getQuantity(), orderLineDTO.getPrice());
+                    BigDecimal lineTotal = orderLineDTO.getPrice().multiply(BigDecimal.valueOf(orderLineDTO.getQuantity()));
+                    newOrderLine.setLineTotal(lineTotal);
+                    return newOrderLine;
+                })
+                .collect(Collectors.toList());
+        existingOrder.setOrderLines(updatedOrderLines);
+
+        // Recalculate total price
+        BigDecimal newTotalPrice = updatedOrderLines.stream()
+                .map(OrderLine::getLineTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        existingOrder.setTotalPrice(newTotalPrice);
+
+        return myOrderRepository.save(existingOrder);
     }
 
     /**
